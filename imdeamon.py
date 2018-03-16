@@ -9,7 +9,7 @@ import argparse
 import logging
 import socket
 import sys
-import time
+from time import sleep
 
 
 
@@ -17,7 +17,11 @@ import time
 
 # Initialize logger subsets / locations
 logger = logging.getLogger('imdaemon')
+logger.setLevel(logging,DEBUG)
 
+# Log to console
+log_to_console = logging.StreamHandler()
+log_to_console.setLevel(logging.DEBUG)
 
 # CLI Argument Parsing
 
