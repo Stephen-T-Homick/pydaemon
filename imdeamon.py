@@ -9,17 +9,17 @@ import argparse
 import logging
 import socket
 import sys
-from time import sleep
-
+import time
 
 
 
 
 # Initialize logger subsets / locations
 logger = logging.getLogger('imdaemon')
-logger.setLevel(logging,DEBUG)
+# Set lowest form of logging
+logger.setLevel(logging.DEBUG)
 
-# Log to console
+# Setup handling to the console, again with the lowest form of logging.
 log_to_console = logging.StreamHandler()
 log_to_console.setLevel(logging.DEBUG)
 
