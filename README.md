@@ -4,6 +4,7 @@ This is a coding challenge to build a daemon from scratch in python under certai
 conditions.
 
 Write code in python which:
+
 x Becomes a daemon (what does it mean for something to become a *real* daemon?)
 x Do not use `systemd`, `nohup`, or similar
 x Do not use a daemonizing library
