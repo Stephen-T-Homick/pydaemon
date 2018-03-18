@@ -1,13 +1,7 @@
 #!/usr/bin/python
-
-"""Steve Homick 2018
-https://github.com/Stephen-T-Homick
- Daemon written from scratch
- http://www.linfo.org/daemon.html
- 'A daemon is a type of program on Unix-like operating systems that runs unobtrusively in the background,
- rather than under the direct control of a user, waiting to be activated by the occurance of a specific event or condition.''
-"""
-
+"""Steve Homick
+2018
+imdaemon.py"""
 import argparse
 import json
 import logging
@@ -18,7 +12,7 @@ import time
 
 #if os.geteuid() != 0:
 #    print "I'm a daemon, I need root privileges. \n \n Exiting."
-#    sys.exit()
+#    sys.exit(1)
 
 
 """
