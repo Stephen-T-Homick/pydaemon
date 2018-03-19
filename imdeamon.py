@@ -20,6 +20,7 @@ syslogSuccessCodes = ['']
 
 logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
 
+# Begin daemonization by first creating a class for Syslog UDP Handling, then a function to handle the incoming data.
 class SyslogUDPHandler(SocketServer.BaseRequestHandler):
 
     def handle_request(self):
@@ -28,7 +29,7 @@ class SyslogUDPHandler(SocketServer.BaseRequestHandler):
 
 
 """
-Pavel - watchrack example
+watchrack example logging
 
 # Initialize logger subsets / locations
 logger = logging.getLogger('imdaemon')
