@@ -4,25 +4,40 @@
 imdaemon.py
 """
 import argparse
-import json
 import logging
 import os
-import socket
 import sys
 import time
 
-#if os.geteuid() != 0:
-#    print "I'm a daemon, I need root / sudo dude. \n \n Exiting."
-#    sys.exit(1)
+if os.geteuid() != 0:
+    print "I'm a daemon, I need root / sudo. \n \n Exiting."
+    sys.exit(1)
 
-syslogSuccessCodes = ['']
+# Default umask creation
+UMASK = 0
 
-# Set basic logging config.
+# Default working dir
+WORKDIR = "/tmp"
 
-logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
+# Maximum File Descriptors
+MAXFD = 1024
 
+# I/O File Descriptors are sent to /dev/null by default.
+if (hasattr(os, "devnull")):
+    REDIRECT_TO = os.devnull
+else:
+    REDIRECT_TO = "/dev/null"
 # Begin daemonization
-
+def createDaemon():
+    try:
+        # Fork child process so the parent can exit successfully.
+        # Failed call to fork raises exception(s)
+        pid = os.fork()
+        pidofFork = os.getpid()
+    except OSError, e:
+        raise Exception, "%s [%d]" % (e.strerror, e.errno)
+    if (pid == 0): # First child process
+        os.setsid()
 
 """
 watchrack example logging
@@ -44,3 +59,7 @@ parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look
 
 
 args = parser.parse_args()
+
+# Set basic logging config.
+LOG_FILE = ""
+logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
