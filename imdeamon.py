@@ -53,6 +53,7 @@ parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look
 args = parser.parse_args()
 
 # Set basic logging config.
+LOG_FILE = ""
 logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
 
 #
