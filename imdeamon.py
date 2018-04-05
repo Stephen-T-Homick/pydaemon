@@ -84,6 +84,7 @@ else:
 
 
 # Set basic logging config.
+LOG_FILE = ""
 logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
 
 #
