@@ -37,7 +37,7 @@ if (hasattr(os, "devnull")):
 else:
     REDIRECT_TO = "/dev/null"
 # Begin daemonization
-def daemon():
+def daemonization():
     """Detach a process from the controlling terminal and run it in the background as a true daemon"""
     try:
         # Fork child process, and returns control to shell
@@ -107,4 +107,4 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 #
 log_to_console.setFormatter(formatter)
 
-daemon()
+daemonization()
