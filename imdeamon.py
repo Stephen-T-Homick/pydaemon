@@ -68,6 +68,7 @@ def daemonization():
                 os._exit(0) # Exit Parent (the first child) of the second child.
     else:
         print "PID is currently registering as ",pid
+
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate a syslog server / daemon over UDP which inherits from a syslog client.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
@@ -81,7 +82,6 @@ else:
     # Initialize the command-line arguments dictionary, and populate $
     #
     args = parser.parse_args()
-
 
 # Set basic logging config.
 LOG_FILE = ""
