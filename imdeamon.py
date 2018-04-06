@@ -70,18 +70,21 @@ def daemonization():
         print "PID is currently registering as ",pid
 
 # CLI Argument Parsing
-parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate a syslog server / daemon over UDP which inherits from a syslog client.')
+parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.')
+parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=True)
 parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
-if len(sys.argv) < 2:
-    parser.print_usage()
-    #parser.print_help() # More verbose output for non args.
-    sys.exit(1)
-else:
-    # Initialize the command-line arguments dictionary, and populate $
-    #
-    args = parser.parse_args()
+# """
+# if len(sys.argv) < 2:
+#     parser.print_usage()
+#     parser.print_help() # More verbose output for non args.
+#     sys.exit(1)
+# else:
+#     # Initialize the command-line arguments dictionary, and populate $
+#     #
+#     """
+#     args = parser.parse_args()
+args = parser.parse_args()
 
 # Set basic logging config.
 LOG_FILE = ""
@@ -91,6 +94,7 @@ logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filena
 #  Initialize logger object, with a definitive name
 #
 logger = logging.getLogger('logDaemon')
+
 # Set "lowest" level of logging
 logger.setLevel(logging.DEBUG)
 # Setup handling output to the console, and set the "lowest" logging level
