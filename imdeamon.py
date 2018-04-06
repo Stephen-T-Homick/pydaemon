@@ -27,6 +27,7 @@ UMASK = 0
 
 # Default working dir
 WORKDIR = "/tmp"
+WORKDIR2 = "/" # Root filesystem. 
 
 # Maximum File Descriptors
 MAXFD = 1024
