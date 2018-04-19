@@ -33,8 +33,9 @@ WORKDIR2 = "/" # Root filesystem.
 MAXFD = 1024
 
 # I/O File Descriptors are sent to /dev/null by default.
-if (hasattr(os, "devnull")):
+if hasattr(os, "devnull") == True:
     REDIRECT_TO = os.devnull
+
 else:
     REDIRECT_TO = "/dev/null"
 # Begin daemonization
@@ -73,8 +74,13 @@ def daemonization():
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
+<<<<<<< HEAD
 parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=True)
 parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
+=======
+parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.')
+#parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
+>>>>>>> 924fafa5f3b493017f32f1b70b06a2af71c999bd
 if len(sys.argv) < 2:
     parser.print_usage()
     parser.print_help() # More verbose output for non args.
