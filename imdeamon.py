@@ -12,22 +12,17 @@ Bits and pieces taken from the watch rack for changes script as well as http://c
 import argparse
 import logging
 import os
+import resource
 import sys
 import time
 
-"""
-Upon completion, deploy.
-
-if os.geteuid() != 0:
-    print "I'm a daemon, I need root / sudo. \n \n Exiting."
-    sys.exit(1)
-    """
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
 
-# Default working dir
-WORKDIR = "/tmp"
-WORKDIR2 = "/" # Root filesystem. 
+# Logging
+LOGDIR = "/var/log"
+LOGFILE = "imdaemon.log" # Root filesystem. 
+LOGCONFIG_FILE = "imdaemon-logcfg.json"
 
 # Maximum File Descriptors
 MAXFD = 1024
@@ -74,7 +69,7 @@ def daemonization():
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate a syslog server / daemon over UDP which inherits from a syslog client.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.')
+parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=False)
 #parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
 if len(sys.argv) < 2:
     parser.print_usage()
@@ -82,31 +77,31 @@ if len(sys.argv) < 2:
     sys.exit(1)
 else:
     # Initialize the command-line arguments dictionary, and populate $
-    #
     args = parser.parse_args()
 
-# Set basic logging config.
-LOG_FILE = ""
-logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
 
-#
-#  Initialize logger object, with a definitive name
-#
-logger = logging.getLogger('logDaemon')
-# Set "lowest" level of logging
-logger.setLevel(logging.DEBUG)
-# Setup handling output to the console, and set the "lowest" logging level
-log_to_console = logging.StreamHandler()
-log_to_console.setLevel(logging.DEBUG)
+# # Set basic logging config.
+# LOG_FILE = ""
+# logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
 
-#
-# Set the default format of the logger
-#
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# #
+# #  Initialize logger object, with a definitive name
+# #
+# logger = logging.getLogger('logDaemon')
+# # Set "lowest" level of logging
+# logger.setLevel(logging.DEBUG)
+# # Setup handling output to the console, and set the "lowest" logging level
+# log_to_console = logging.StreamHandler()
+# log_to_console.setLevel(logging.DEBUG)
 
-#
-# Set the console output format.
-#
-log_to_console.setFormatter(formatter)
+# #
+# # Set the default format of the logger
+# #
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# #
+# # Set the console output format.
+# #
+# log_to_console.setFormatter(formatter)
 
 daemonization()
