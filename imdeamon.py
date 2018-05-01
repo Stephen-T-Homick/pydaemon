@@ -18,12 +18,9 @@ import time
 try:
     import resource
 
-<<<<<<< HEAD
 except ImportError:
     print "\n 'resource' library not available. "
 
-=======
->>>>>>> 9f73f0884caa6bb73345a03f8e965f22f2102547
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
 
@@ -105,7 +102,6 @@ def daemonization():
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-<<<<<<< HEAD
 parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.',required=False)
 
 args = parser.parse_args()
@@ -134,7 +130,6 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 # Set the console output format.
 #
 log_to_console.setFormatter(formatter)
-=======
 parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=False)
 #parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
 
@@ -173,6 +168,5 @@ else:
 # # Set the console output format.
 # #
 # log_to_console.setFormatter(formatter)
->>>>>>> 9f73f0884caa6bb73345a03f8e965f22f2102547
 
 daemonization()
