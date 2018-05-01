@@ -14,14 +14,12 @@ import logging
 import os
 import sys
 import time
+try:
+    import resource
 
-"""
-Upon completion, deploy.
+except ImportError:
+    print "\n 'resource' library not available. "
 
-if os.geteuid() != 0:
-    print "I'm a daemon, I need root / sudo. \n \n Exiting."
-    sys.exit(1)
-    """
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
 
@@ -44,10 +42,13 @@ def daemonization():
     try:
         # Fork child process, and returns control to shell
         # This guaranteed that the child will not be a process group leader (parent)
-        pid = os.fork()
+        if hasattr(os,"fork"):
+            pid = os.fork()
     except OSError, e:
         raise Exception, "%s [%d]" % (e.strerror,e.errno)
-    if (pid == 0):   # First Child Process
+    
+
+    if (pid == 0):   # First Child Process, session leader.
         os.setsid()
         """
         setsid() creates a new session if the calling process is not a process group leader.
@@ -55,41 +56,54 @@ def daemonization():
         has no controlling terminal. The process group ID and session ID of the calling process are set to the PID of the calling process.
         The calling process will be the only process in this new process group and in this new session.
         """
-
         try:
             # Fork a second child process, and exit immediately to prevent zombie processes.
             pid = os.fork() # Fork second child
-        except OSError, e:
-            raise Exception, "%s [%d]" % (e.strerror, e.errno)
+        except OSError:
+            print "OS System call failed for fork pid -> %d" % pid
 
-        if (pid == 0):
+        if (pid == 0): # Second Child. The current directory will likely be a mounted filesystem / accessible directory. 
             os.chdir(WORKDIR)
             os.umask(UMASK)
 
         else:
                 os._exit(0) # Exit Parent (the first child) of the second child.
     else:
-        print "PID is currently registering as ",pid
+        #print "PID is currently registering as ",pid
+        os._exit(0)
+# Close all open file descriptors ^ 
+    maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
+
+
+    if (maxfd == resource.RLIM_INFINITY):
+        maxfd = MAXFD # Sets maxfd back to 1024
+
+        # Iterator to close all file descriptors.
+    for fd in range(0,maxfd):
+        try:
+            os.close(fd)
+        except OSError: # If file descriptor was not open from the start.
+            pass
+    # Redirect standard I/O file descriptors to the specified file. Most file descriptors are sent to /dev/null to avoid conflictions. 
+    os.open(REDIRECT_TO, os.O_RDWR) #Standard input (0)
+
+    # Duplicate standard input to standard output and standard error.
+    os.dup2(0,1) # Duplicate file descriptor. - Standard output (1)
+    os.dup2(0,2) # Standard error (2)
+    
+    
+  
+
+
+        
 
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-<<<<<<< HEAD
-parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=True)
-parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
-=======
-parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.')
-#parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
->>>>>>> 924fafa5f3b493017f32f1b70b06a2af71c999bd
-if len(sys.argv) < 2:
-    parser.print_usage()
-    parser.print_help() # More verbose output for non args.
-    print("\n No arguments given. \n ")
-    sys.exit(1)
-else:
-    # Initialize the command-line arguments dictionary, and populate
-    args = parser.parse_args()
+parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.',required=False)
 
+args = parser.parse_args()
+    
 # Set basic logging config.
 LOG_FILE = ""
 logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')

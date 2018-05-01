@@ -1,0 +1,6 @@
+DEBUG:root:This message should theoretically go to the log file.
+WARNING:root:And this too
+INFO:root:I told you so !
+DEBUG:root:This message should theoretically go to the log file.
+WARNING:root:And this too
+INFO:root:I told you so !
