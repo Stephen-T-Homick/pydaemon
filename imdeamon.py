@@ -12,20 +12,25 @@ Bits and pieces taken from the watch rack for changes script as well as http://c
 import argparse
 import logging
 import os
+import resource
 import sys
 import time
 try:
     import resource
 
+<<<<<<< HEAD
 except ImportError:
     print "\n 'resource' library not available. "
 
+=======
+>>>>>>> 9f73f0884caa6bb73345a03f8e965f22f2102547
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
 
-# Default working dir
-WORKDIR = "/tmp"
-WORKDIR2 = "/" # Root filesystem. 
+# Logging
+LOGDIR = "/var/log"
+LOGFILE = "imdaemon.log" # Root filesystem. 
+LOGCONFIG_FILE = "imdaemon-logcfg.json"
 
 # Maximum File Descriptors
 MAXFD = 1024
@@ -100,6 +105,7 @@ def daemonization():
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
+<<<<<<< HEAD
 parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.',required=False)
 
 args = parser.parse_args()
@@ -128,5 +134,45 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 # Set the console output format.
 #
 log_to_console.setFormatter(formatter)
+=======
+parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=False)
+#parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
+
+"""
+No longer needed, taken care of via argparse library
+
+if len(sys.argv) < 2:
+    parser.print_usage()
+    #parser.print_help() # More verbose output for non args.
+    sys.exit(1)
+else:
+    # Initialize the command-line arguments dictionary, and populate $
+    args = parser.parse_args()
+
+"""
+# # Set basic logging config.
+# LOG_FILE = ""
+# logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
+
+# #
+# #  Initialize logger object, with a definitive name
+# #
+# logger = logging.getLogger('logDaemon')
+# # Set "lowest" level of logging
+# logger.setLevel(logging.DEBUG)
+# # Setup handling output to the console, and set the "lowest" logging level
+# log_to_console = logging.StreamHandler()
+# log_to_console.setLevel(logging.DEBUG)
+
+# #
+# # Set the default format of the logger
+# #
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# #
+# # Set the console output format.
+# #
+# log_to_console.setFormatter(formatter)
+>>>>>>> 9f73f0884caa6bb73345a03f8e965f22f2102547
 
 daemonization()
