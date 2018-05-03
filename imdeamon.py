@@ -19,6 +19,10 @@ import time
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
 
+# Working Directory
+
+WORKDIR = "/tmp"
+
 # Logging
 LOGDIR = "/var/log"
 LOGFILE = "imdaemon.log" # Root filesystem. 
@@ -69,9 +73,10 @@ def daemonization():
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate a syslog server / daemon over UDP which inherits from a syslog client.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=False)
+parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=True)
 #parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
 
+args = parser.parse_args()
 """
 No longer needed, taken care of via argparse library
 
