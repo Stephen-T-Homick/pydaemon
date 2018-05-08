@@ -30,24 +30,41 @@ try:
     import resource
 
 except ImportError:
-    print "\n 'resource' library not available. "
+    print "\n 'resource' library not available. Install with `pip install resource`, skipping for now \n"
+
+# Logger variables
+#
+#
+LOGDIR = "/var/log/pydaemon"
+LOGFILE = "/var/log/pydaemon/imdaemon.log"
+LOGCONFIG_FILE = "/var/log/pydaemon/imdaemon-logcfg.json"
+#
+#
 
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
 
-# Logging
-LOGDIR = "/var/log"
-LOGFILE = "imdaemon.log" # Root filesystem. 
-LOGCONFIG_FILE = "imdaemon-logcfg.json"
-
+# Working Directory
+WORKDIR = "/tmp"
 # Maximum File Descriptors
 MAXFD = 1024
 
+<<<<<<< HEAD
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
 parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.',required=False)
 args = parser.parse_args()  # Parser object where attributes are actually called.
+=======
+# Logger object Setup, with definitive name.
+logger = logging.getLogger('daemonicLogger')
+
+# Set 'lowest' level of logging by default. 
+logger.setLevel(logging.DEBUG)
+
+    
+
+>>>>>>> 5e8414f6e587f191c41c6efc54fcdb3867bc6634
 
 # I/O File Descriptors are sent to /dev/null by default.
 if hasattr(os, "devnull") == True:
@@ -55,6 +72,7 @@ if hasattr(os, "devnull") == True:
 
 else:
     REDIRECT_TO = "/dev/null"
+
 # Begin daemonization
 def daemonization():
     """Detach a process from the controlling terminal and run it in the background as a true daemon"""
@@ -64,8 +82,7 @@ def daemonization():
         if hasattr(os,"fork"):
             pid = os.fork()
     except OSError, e:
-        raise Exception, "%s [%d]" % (e.strerror,e.errno)
-    
+        raise Exception, "%s [%d]" % (e.strerror,e.errno)   
 
     if (pid == 0):   # First Child Process, session leader.
         os.setsid()
@@ -110,6 +127,7 @@ def daemonization():
     os.dup2(0,1) # Duplicate file descriptor. - Standard output (1)
     os.dup2(0,2) # Standard error (2)
     
+<<<<<<< HEAD
     return 0
 
 if __name__ == "__main__":
@@ -133,5 +151,19 @@ if __name__ == "__main__":
     
     
 
+=======
+# CLI Argument Parsing
+parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
+parser.add_argument('-help', action='help', help="Show this help message, and exit.")
+parser.add_argument('--logfile', help='Manual naming convention of log file. Default name / path is /var/log/pydaemon/imdaemon.log', required=False)
+parser.add_argument('--verbose', help='Increases verbosity of the script / daemon, raises criticality of logging / debugging', action='store_true')
 
-daemonization()
+args = parser.parse_args()
+
+if args.verbose:
+    logger.setLevel(logging.CRITICAL)
+
+else:
+>>>>>>> 5e8414f6e587f191c41c6efc54fcdb3867bc6634
+
+    daemonization()
