@@ -8,6 +8,17 @@ and functionality / termination within standard process state codes.
 
 Bits and pieces taken from the watch rack for changes script as well as http://code.activestate.com/recipes/278731-creating-a-daemon-the-python-way/
 
+usage: imdeamon.py [-h] [-help] [--logfile LOGFILE]
+
+This is a light weight daemon to demonstrate system processing and
+daemonization.
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -help              Show this help message, and exit.
+  --logfile LOGFILE  Path to the logfile. May not be useful when using the
+  --verbose flag.
+
 """
 import argparse
 import logging
@@ -31,6 +42,12 @@ LOGCONFIG_FILE = "imdaemon-logcfg.json"
 
 # Maximum File Descriptors
 MAXFD = 1024
+
+# CLI Argument Parsing
+parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
+parser.add_argument('-help', action='help', help="Show this help message, and exit.")
+parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.',required=False)
+args = parser.parse_args()  # Parser object where attributes are actually called.
 
 # I/O File Descriptors are sent to /dev/null by default.
 if hasattr(os, "devnull") == True:
@@ -65,7 +82,7 @@ def daemonization():
             print "OS System call failed for fork pid -> %d" % pid
 
         if (pid == 0): # Second Child. The current directory will likely be a mounted filesystem / accessible directory. 
-            os.chdir(WORKDIR)
+            os.chdir(LOGDIR)
             os.umask(UMASK)
 
         else:
@@ -93,69 +110,28 @@ def daemonization():
     os.dup2(0,1) # Duplicate file descriptor. - Standard output (1)
     os.dup2(0,2) # Standard error (2)
     
+    return 0
+
+if __name__ == "__main__":
+
+    retCode = daemonization()
+
+    procParams = """
+    return code = %s
+    process ID = %s
+    parent process ID = %s
+    process group ID = %s
+    session ID = %s
+    user ID = %s
+    effective user ID = %s
+    real group ID = %s
+    effective group ID = %s
+    """ % (retCode, os.getpid(), os.getppid(), os.getpgrp(), os.getsid(0),os.getuid(),os.geteuid(),os.getgid(),os.getegid())
+    daemonLog = open("createDaemon.log","w").write(procParams + "\n")
+
+    sys.exit(retCode)
     
-  
-
-
-        
-
-# CLI Argument Parsing
-parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
-parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.',required=False)
-
-args = parser.parse_args()  # Parser object where attributes are actually called. 
     
-# Set basic logging config.
-LOG_FILE = ""
-logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
 
-#
-#  Initialize logger object, with a definitive name
-#
-logger = logging.getLogger('logDaemon')
-
-# Set "lowest" level of logging
-logger.setLevel(logging.DEBUG)
-# Setup handling output to the console, and set the "lowest" logging level
-log_to_console = logging.StreamHandler()
-log_to_console.setLevel(logging.DEBUG)
-
-#
-# Set the default format of the logger
-#
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-#
-# Set the console output format.
-#
-log_to_console.setFormatter(formatter)
-parser.add_argument('--logfile', help='Path to the logfile. May not be useful when using the --verbose flag.', required=False)
-#parser.add_argument('-v', help='Increases Verbosity of the script / daemon. Look for more redirection to syslog as well.', action='store_true')
-
-
-Set basic logging config.
-LOG_FILE = ""
-logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode = 'a')
-
-
-#  Initialize logger object, with a definitive name
-
-logger = logging.getLogger('logDaemon')
-# Set "lowest" level of logging
-logger.setLevel(logging.DEBUG)
-# Setup handling output to the console, and set the "lowest" logging level
-log_to_console = logging.StreamHandler()
-log_to_console.setLevel(logging.DEBUG)
-
-
-# Set the default format of the logger
-
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-
-# Set the console output format.
-
-log_to_console.setFormatter(formatter)
 
 daemonization()
