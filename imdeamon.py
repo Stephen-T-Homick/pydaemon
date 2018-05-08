@@ -32,11 +32,21 @@ try:
 except ImportError:
     print "\n 'resource' library not available. Install with `pip install resource`, skipping for now \n"
 
+
+# CLI Argument Parsing
+parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
+parser.add_argument('-help', action='help', help="Show this help message, and exit.")
+#parser.add_argument('--json', help='Dump Logging to JSON',required=False )
+parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
+parser.add_argument('--verbose', help='Increases verbosity of the script / daemon, raises criticality of logging / debugging', action='store_true')
+args = parser.parse_args()
+
+
 # Log variables
 #
 #
 LOGDIR = "/tmp/pydaemon"
-LOGFILE = "/tmp/pydaemon/imdaemon.log"
+LOGFILE = LOGDIR + args.logfile
 LOGCONFIG_FILE = "/tmp/pydaemon/imdaemon-logcfg.json"
 #
 #
@@ -49,12 +59,7 @@ WORKDIR = "/tmp"
 # Maximum File Descriptors
 MAXFD = 1024    
 
-# CLI Argument Parsing
-parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
-parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
-parser.add_argument('--verbose', help='Increases verbosity of the script / daemon, raises criticality of logging / debugging', action='store_true')
-args = parser.parse_args()
+
 
 
 # I/O File Descriptors are sent to /dev/null by default.
@@ -125,6 +130,10 @@ def daemonization():
     
     return 0
 
+def jsonDump(daemonLog):
+    json.dumps(args.logfile,indent=6, sort_keys = True)
+    return 0
+
 if __name__ == "__main__":
 
     retCode = daemonization()
@@ -141,10 +150,9 @@ if __name__ == "__main__":
     effective group ID = %s
     """ % (retCode, os.getpid(), os.getppid(), os.getpgrp(), os.getsid(0),os.getuid(),os.geteuid(),os.getgid(),os.getegid())
     daemonLog = open(args.logfile,"w").write(procParams + "\n")
-
+    
+    
+    
     sys.exit(retCode)
     
-    
-
-
     daemonization()
