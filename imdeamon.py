@@ -21,6 +21,7 @@ optional arguments:
 
 """
 import argparse
+import json
 import logging
 import os
 import resource
@@ -32,15 +33,13 @@ try:
 except ImportError:
     print "\n 'resource' library not available. Install with `pip install resource`, skipping for now \n"
 
-
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
 #parser.add_argument('--json', help='Dump Logging to JSON',required=False )
 parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
-parser.add_argument('--verbose', help='Increases verbosity of the script / daemon, raises criticality of logging / debugging', action='store_true')
+parser.add_argument('--json', help='Specify this flag to dump output of JSON notated daemon information into the logfile as well.', required=False,action='store_true')
 args = parser.parse_args()
-
 
 # Log variables
 #
@@ -58,9 +57,6 @@ UMASK = 0
 WORKDIR = "/tmp"
 # Maximum File Descriptors
 MAXFD = 1024    
-
-
-
 
 # I/O File Descriptors are sent to /dev/null by default.
 if hasattr(os, "devnull") == True:
@@ -111,7 +107,6 @@ def daemonization():
 # Close all open file descriptors ^ 
     maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
 
-
     if (maxfd == resource.RLIM_INFINITY):
         maxfd = MAXFD # Sets maxfd back to 1024
 
@@ -130,14 +125,30 @@ def daemonization():
     
     return 0
 
-def jsonDump(daemonLog):
-    json.dumps(args.logfile,indent=6, sort_keys = True)
-    return 0
+def jsonDump(logFile):
+    os.chdir(LOGDIR)
+    fileOpen = open(logFile,'w')
+    if type(fileOpen) == file: #Successfully opened logfile
+        json.dump(procParams,logFile,indent=6, sort_keys = True)
+        
+    
+    
+
+        
+    # with open(args.logfile,'w') as jsonoutfile)
+    #     json.dump(procParams,jsonoutfile)
+    
+    
+    # json.dumps(args.logfile,indent=6, sort_keys = True)
+    # return 0
 
 if __name__ == "__main__":
+    
+    if args.json:
+        print "json Argument received"
+        jsonDump(args.logfile)
 
     retCode = daemonization()
-
     procParams = """
     return code = %s
     process ID = %s
@@ -151,8 +162,7 @@ if __name__ == "__main__":
     """ % (retCode, os.getpid(), os.getppid(), os.getpgrp(), os.getsid(0),os.getuid(),os.geteuid(),os.getgid(),os.getegid())
     daemonLog = open(args.logfile,"w").write(procParams + "\n")
     
-    
-    
-    sys.exit(retCode)
+
+
     
     daemonization()
