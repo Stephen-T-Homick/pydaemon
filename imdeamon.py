@@ -86,7 +86,7 @@ def daemonization():
         else:
                 os._exit(0) # Exit Parent (the first child) of the second child.
     else:
-        #print "PID is currently registering as ",pid
+        print "PID is currently registering as ",pid
         os._exit(0)
 # Close all open file descriptors ^ 
     maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
