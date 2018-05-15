@@ -19,6 +19,15 @@ optional arguments:
   --logfile LOGFILE  Path to the logfile. May not be useful when using the
   --verbose flag.
 
+TODO:
+
+* Signal Handling -15 and SIGHUP -15 / SIGTERM
+
+* Logging
+
+* PID FILE tracking - Make sure daemonizer only runs once. 
+
+* Time based loop 
 """
 import argparse
 import json
@@ -44,9 +53,9 @@ args = parser.parse_args()
 # Log variables
 #
 #
-LOGDIR = "/tmp/pydaemon"
+LOGDIR = "/tmp/pydaemon/"
 LOGFILE = LOGDIR + args.logfile
-LOGCONFIG_FILE = "/tmp/pydaemon/imdaemon-logcfg.json"
+LOGCONFIG_FILE = "%s/imdaemon-logcfg.json",LOGDIR
 #
 #
 #
@@ -87,6 +96,7 @@ def daemonization():
         try:
             # Fork a second child process, and exit immediately to prevent zombie processes.
             pid = os.fork() # Fork second child
+            os.system("ps "),pid
         except OSError:
             print "OS System call failed for fork pid -> %d" % pid
 
@@ -161,6 +171,7 @@ if __name__ == "__main__":
     effective group ID = %s
     """ % (retCode, os.getpid(), os.getppid(), os.getpgrp(), os.getsid(0),os.getuid(),os.geteuid(),os.getgid(),os.getegid())
     daemonLog = open(args.logfile,"w").write(procParams + "\n")
+   
     
 
 
