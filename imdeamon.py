@@ -19,6 +19,16 @@ optional arguments:
   --logfile LOGFILE  Path to the logfile. May not be useful when using the
   --verbose flag.
 
+TODO:
+
+* Signal Handling -15 and SIGHUP -15 / SIGTERM
+
+* Logging
+
+* PID FILE tracking - Make sure daemonizer only runs once. 
+
+* Time based loop 
+
 """
 import argparse
 import json
@@ -39,17 +49,45 @@ parser.add_argument('-help', action='help', help="Show this help message, and ex
 #parser.add_argument('--json', help='Dump Logging to JSON',required=False )
 parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
 parser.add_argument('--json', help='Specify this flag to dump output of JSON notated daemon information into the logfile as well.', required=False,action='store_true')
-args = parser.parse_args()
+parser.add_argument('--verbose', help='Make the daemon more chatty.', required=False,action='store_true')
 
-# Log variables
 #
+# Initialize the command-line arguments dictionary, and populate it from what was parsed out.
 #
-LOGDIR = "/tmp/pydaemon"
-LOGFILE = LOGDIR + args.logfile
-LOGCONFIG_FILE = "/tmp/pydaemon/imdaemon-logcfg.json"
+args = parser.parse_args()
+#  Initialize logger object, with a definitive name
 #
+
+
+# 
+logger = logging.getLogger('daemonWatch')
+# Set "lowest" level of logging
+logger.setLevel(logging.DEBUG)
+# Setup handling output to the console, and set the "lowest" logging level
+log_to_console = logging.StreamHandler()
+log_to_console.setLevel(logging.DEBUG)
+
+# Setup formatting of the logging. 
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 #
+# Set the console output format.
 #
+log_to_console.setFormatter(formatter)
+
+
+
+
+# # Log variables
+# #
+# #
+# LOGDIR = "/tmp/pydaemon"
+# LOGFILE = LOGDIR + args.logfile
+# LOGCONFIG_FILE = "/tmp/pydaemon/imdaemon-logcfg.json"
+# #
+# #
+# #
 
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
