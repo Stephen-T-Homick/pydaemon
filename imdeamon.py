@@ -1,23 +1,16 @@
 #!/usr/bin/python
 """daemon-Eyes
 
-Disk And Execution MONitor
-
-This is meant to be as pythonic as possible to illustrate daemonization
-and functionality / termination within standard process state codes.
-
-Bits and pieces taken from the watch rack for changes script as well as http://code.activestate.com/recipes/278731-creating-a-daemon-the-python-way/
-
 usage: imdeamon.py [-h] [-help] [--logfile LOGFILE]
 
 This is a light weight daemon to demonstrate system processing and
 daemonization.
 
 optional arguments:
-  -h, --help         show this help message and exit
-  -help              Show this help message, and exit.
-  --logfile LOGFILE  Path to the logfile. May not be useful when using the
-  --verbose flag.
+ -h , --help        Show this help message and exit
+ -help              Show this help message, and exit.
+ --logfile LOGFILE  Path to the logfile. 
+ --verbose Increase chattiness, show more signal handling.
 
 TODO:
 
@@ -43,12 +36,12 @@ except ImportError:
     print "\n 'resource' library not available. Install with `pip install resource`, skipping for now \n"
 
 # CLI Argument Parsing
+
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
 parser.add_argument('--json', help='Specify this flag to dump output of JSON notated daemon information into the logfile as well.', required=False,action='store_true')
 parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
 parser.add_argument('--verbose',help='Increase the verbosity of the script. Logging / Signal Handling etc.')
-
 args = parser.parse_args()
 
 # Log variables
