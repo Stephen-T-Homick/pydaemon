@@ -45,9 +45,10 @@ except ImportError:
 # CLI Argument Parsing
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-#parser.add_argument('--json', help='Dump Logging to JSON',required=False )
-parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
 parser.add_argument('--json', help='Specify this flag to dump output of JSON notated daemon information into the logfile as well.', required=False,action='store_true')
+parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
+parser.add_argument('--verbose',help='Increase the verbosity of the script. Logging / Signal Handling etc.')
+
 args = parser.parse_args()
 
 # Log variables
