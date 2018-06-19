@@ -1,34 +1,37 @@
 #!/usr/bin/python
 """daemon-Eyes
 
-Disk And Execution MONitor
-
-This is meant to be as pythonic as possible to illustrate daemonization
-and functionality / termination within standard process state codes.
-
-Bits and pieces taken from the watch rack for changes script as well as http://code.activestate.com/recipes/278731-creating-a-daemon-the-python-way/
-
 usage: imdeamon.py [-h] [-help] [--logfile LOGFILE]
 
 This is a light weight daemon to demonstrate system processing and
 daemonization.
 
 optional arguments:
-  -h, --help         show this help message and exit
-  -help              Show this help message, and exit.
-  --logfile LOGFILE  Path to the logfile. May not be useful when using the
-  --verbose flag.
+ -h , --help        Show this help message and exit
+ -help              Show this help message, and exit.
+ --logfile LOGFILE  Path to the logfile. 
+ --verbose Increase chattiness, show more signal handling.
 
 TODO:
 
 * Signal Handling -15 and SIGHUP -15 / SIGTERM
 
+<<<<<<< HEAD
+TODO:
+
+* Signal Handling -15 and SIGHUP -15 / SIGTERM
+
+=======
+>>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 * Logging
 
 * PID FILE tracking - Make sure daemonizer only runs once. 
 
 * Time based loop 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 """
 import argparse
 import json
@@ -44,18 +47,29 @@ except ImportError:
     print "\n 'resource' library not available. Install with `pip install resource`, skipping for now \n"
 
 # CLI Argument Parsing
+
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
-#parser.add_argument('--json', help='Dump Logging to JSON',required=False )
-parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
 parser.add_argument('--json', help='Specify this flag to dump output of JSON notated daemon information into the logfile as well.', required=False,action='store_true')
+<<<<<<< HEAD
 parser.add_argument('--verbose', help='Make the daemon more chatty.', required=False,action='store_true')
+=======
+parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
+parser.add_argument('--verbose',help='Increase the verbosity of the script. Logging / Signal Handling etc.')
+args = parser.parse_args()
+>>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 
 #
 # Initialize the command-line arguments dictionary, and populate it from what was parsed out.
 #
+<<<<<<< HEAD
 args = parser.parse_args()
 #  Initialize logger object, with a definitive name
+=======
+LOGDIR = "/tmp/pydaemon/"
+LOGFILE = LOGDIR + args.logfile
+LOGCONFIG_FILE = "%s/imdaemon-logcfg.json",LOGDIR
+>>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 #
 
 
@@ -125,6 +139,7 @@ def daemonization():
         try:
             # Fork a second child process, and exit immediately to prevent zombie processes.
             pid = os.fork() # Fork second child
+            os.system("ps "),pid
         except OSError:
             print "OS System call failed for fork pid -> %d" % pid
 
@@ -140,7 +155,7 @@ def daemonization():
         else:
                 os._exit(0) # Exit Parent (the first child) of the second child.
     else:
-        #print "PID is currently registering as ",pid
+        print "PID is currently registering as ",pid
         os._exit(0)
 # Close all open file descriptors ^ 
     maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
@@ -199,6 +214,7 @@ if __name__ == "__main__":
     effective group ID = %s
     """ % (retCode, os.getpid(), os.getppid(), os.getpgrp(), os.getsid(0),os.getuid(),os.geteuid(),os.getgid(),os.getegid())
     daemonLog = open(args.logfile,"w").write(procParams + "\n")
+   
     
 
 
