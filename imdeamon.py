@@ -1,5 +1,7 @@
-#!/usr/bin/python
-"""daemon-Eyes
+#!/usr/bin/env/python 3
+
+ """
+# daemon-Eyes
 
 usage: imdeamon.py [-h] [-help] [--logfile LOGFILE]
 
@@ -16,23 +18,13 @@ TODO:
 
 * Signal Handling -15 and SIGHUP -15 / SIGTERM
 
-<<<<<<< HEAD
-TODO:
-
-* Signal Handling -15 and SIGHUP -15 / SIGTERM
-
-=======
->>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 * Logging
 
 * PID FILE tracking - Make sure daemonizer only runs once. 
 
 * Time based loop 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 """
+
 import argparse
 import json
 import logging
@@ -51,25 +43,13 @@ except ImportError:
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
 parser.add_argument('--json', help='Specify this flag to dump output of JSON notated daemon information into the logfile as well.', required=False,action='store_true')
-<<<<<<< HEAD
 parser.add_argument('--verbose', help='Make the daemon more chatty.', required=False,action='store_true')
-=======
-parser.add_argument('--logfile', help='Specify the name of your logfile, which will be stored in /tmp/pydaemon', required=True)
-parser.add_argument('--verbose',help='Increase the verbosity of the script. Logging / Signal Handling etc.')
-args = parser.parse_args()
->>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 
 #
 # Initialize the command-line arguments dictionary, and populate it from what was parsed out.
 #
-<<<<<<< HEAD
 args = parser.parse_args()
 #  Initialize logger object, with a definitive name
-=======
-LOGDIR = "/tmp/pydaemon/"
-LOGFILE = LOGDIR + args.logfile
-LOGCONFIG_FILE = "%s/imdaemon-logcfg.json",LOGDIR
->>>>>>> 0f3c9772962ae5a85446b785f68a22c750a301a1
 #
 
 
