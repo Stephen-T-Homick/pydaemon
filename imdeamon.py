@@ -23,6 +23,7 @@ TODO:
 * PID FILE tracking - Make sure daemonizer only runs once. 
 
 * Time based loop 
+Just a reminder - this is tested with ssh
 """
 
 import argparse
