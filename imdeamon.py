@@ -1,29 +1,26 @@
-#!/usr/bin/env/python 3
+#!/usr/bin/env python3
 
- """
+"""
 # daemon-Eyes
 
-usage: imdeamon.py [-h] [-help] [--logfile LOGFILE]
-
-This is a light weight daemon to demonstrate system processing and
-daemonization.
-
-optional arguments:
- -h , --help        Show this help message and exit
- -help              Show this help message, and exit.
- --logfile LOGFILE  Path to the logfile. 
- --verbose Increase chattiness, show more signal handling.
+# Becomes a daemon (think about what is involved in becoming a true daemon)
+# > The first thing to think about is how to actually detach/daemonize.
+# > Just a fork() isn't enough, since when the parent which has fork()'ed goes away,
+# > The "daemon" ends up a zombie. Instead, it is necessary to double-fork.
+# > Read up on it here, just to understand a bit more, since the note says to give it some deeper thought:
+# > http://www.win.tue.nl/~aeb/linux/lk/lk-10.html
 
 TODO:
 
-* Signal Handling -15 and SIGHUP -15 / SIGTERM
-
 * Logging
+
+* Signal Handling -15 and SIGHUP -15 / SIGTERM
 
 * PID FILE tracking - Make sure daemonizer only runs once. 
 
 * Time based loop 
 Just a reminder - this is tested with ssh
+
 """
 
 import argparse
@@ -33,29 +30,18 @@ import os
 import resource
 import sys
 import time
-try:
-    import resource
 
-except ImportError:
-    print "\n 'resource' library not available. Install with `pip install resource`, skipping for now \n"
 
-# CLI Argument Parsing
-
+### CLI Argument Parsing ###
 parser = argparse.ArgumentParser(description = 'This is a light weight daemon to demonstrate system processing and daemonization.')
 parser.add_argument('-help', action='help', help="Show this help message, and exit.")
 parser.add_argument('--json', help='Specify this flag to dump output of JSON notated daemon information into the logfile as well.', required=False,action='store_true')
 parser.add_argument('--verbose', help='Make the daemon more chatty.', required=False,action='store_true')
-
-#
-# Initialize the command-line arguments dictionary, and populate it from what was parsed out.
-#
-args = parser.parse_args()
-#  Initialize logger object, with a definitive name
-#
+parser.add_argument('--logfile', help='Path to the logfile. If empty, output is STDOUT/STDERR, which implies something else handling logfile(s). Typically useful with --verbose')
 
 
-# 
-logger = logging.getLogger('daemonWatch')
+###  Initialize logger object, with a definitive name ###
+logger = logging.getLogger('DaemonLogging')
 # Set "lowest" level of logging
 logger.setLevel(logging.DEBUG)
 # Setup handling output to the console, and set the "lowest" logging level
@@ -64,14 +50,20 @@ log_to_console.setLevel(logging.DEBUG)
 
 # Setup formatting of the logging. 
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
+if args.verbose:
+  formatter = logging.Formatter('%(levelname)s - %(processName)s[%(threadName)s|%(funcName)s] - %(message)s')
+else:
+  formatter = logging.Formatter('%(levelname)s - %(message)s')
 #
 # Set the console output format.
 #
 log_to_console.setFormatter(formatter)
 
+# Initialize the command-line arguments dictionary, and populate it from what was parsed out.
+args = parser.parse_args()
 
+if args.logfile():
+    log_to_file = 
 
 
 # # Log variables
@@ -83,6 +75,8 @@ log_to_console.setFormatter(formatter)
 # #
 # #
 # #
+
+### File Descriptor variables and the like ###
 
 # Default umask / file  mode creation mask of the daemon.
 UMASK = 0
